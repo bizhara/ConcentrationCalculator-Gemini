@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>濃度計算アプリ</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: auto; background-color: #f9f9f9; }
+  .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  .input-group { margin-bottom: 15px; }
+  label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+  input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+  button { width: 100%; padding: 12px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
+  .btn-calc { background-color: #007BFF; color: white; }
+  .btn-calc:hover { background-color: #0056b3; }
+  .btn-reset { background-color: #e0e0e0; color: #333; }
+  .btn-reset:hover { background-color: #c8c8c8; }
+  #message { color: #d9534f; font-weight: bold; margin-top: 10px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2 style="text-align: center; color: #333;">濃度計算アプリ</h2>
+  
+  <div class="input-group">
+    <label>水 X (リットル)</label>
+    <input type="number" id="valX" placeholder="例: 1.5">
+  </div>
+  
+  <div class="input-group">
+    <label>濃度 Y (%)</label>
+    <input type="number" id="valY" placeholder="例: 10">
+  </div>
+  
+  <div class="input-group">
+    <label>食材 Z (グラム)</label>
+    <input type="number" id="valZ" placeholder="例: 150">
+  </div>
+
+  <button class="btn-calc" onclick="calculate()">計算する</button>
+  <button class="btn-reset" onclick="resetForm()">リセット</button>
+
+  <div id="message"></div>
+</div>
+
+<script>
+  function calculate() {
+    const xInput = document.getElementById('valX');
+    const yInput = document.getElementById('valY');
+    const zInput = document.getElementById('valZ');
+    const msg = document.getElementById('message');
+    
+    let x = xInput.value !== "" ? parseFloat(xInput.value) : null;
+    let y = yInput.value !== "" ? parseFloat(yInput.value) : null;
+    let z = zInput.value !== "" ? parseFloat(zInput.value) : null;
+
+    msg.innerText = "";
+
+    // 入力状況のチェック
+    const filledCount = [x, y, z].filter(val => val !== null).length;
+
+    if (filledCount < 2) {
+      msg.innerText = "2つの値を入力してください。";
+      return;
+    }
+    if (filledCount === 3) {
+      msg.innerText = "すでに3つの値が入力されています。1つを空にして計算してください。";
+      return;
+    }
+
+    // 計算ロジック
+    if (x !== null && z !== null) {
+      // Y (濃度) を求める
+      yInput.value = ((z / (x * 1000 + z)) * 100).toFixed(2);
+    } else if (x !== null && y !== null) {
+      // Z (食材) を求める
+      if (y >= 100) { msg.innerText = "濃度は100%未満にしてください。"; return; }
+      zInput.value = ((1000 * x * y) / (100 - y)).toFixed(2);
+    } else if (y !== null && z !== null) {
+      // X (水) を求める
+      if (y <= 0 || y >= 100) { msg.innerText = "濃度は0%より大きく100%未満にしてください。"; return; }
+      xInput.value = ((z * (100 - y)) / (1000 * y)).toFixed(2);
+    }
+  }
+
+  function resetForm() {
+    document.getElementById('valX').value = "";
+    document.getElementById('valY').value = "";
+    document.getElementById('valZ').value = "";
+    document.getElementById('message').innerText = "";
+  }
+</script>
+
+</body>
+</html>
