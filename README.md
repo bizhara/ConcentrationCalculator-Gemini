@@ -5,3 +5,5 @@
 上記をブラウザで利用できるウェブアプリとして URL がわかれば動かせるようにしてほしい。
 
 公開 URL: https://bizhara.github.io/ConcentrationCalculator-Gemini/
+
+<img width="402" height="498" alt="スクリーンショット 2026-06-25 21 10 07" src="https://github.com/user-attachments/assets/69cd32ae-baa7-413c-8075-f55c716f2627" />
